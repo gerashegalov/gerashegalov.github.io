@@ -1,10 +1,7 @@
 ---
 title: How to set up basic authentication of JobTracker webUI
-layout: default
+layout: post
 ---
-
-How to set up basic authentication of JobTracker webUI
-======================================================
 
 All hadoop daemons use an embedded Jetty web container to host JSP for webui, e.g., currently v6.1.26 in branch-1. So the question is [how to configure security with embedded jetty](http://docs.codehaus.org/display/JETTY/How+to+Configure+Security+with+Embedded+Jetty).
 
