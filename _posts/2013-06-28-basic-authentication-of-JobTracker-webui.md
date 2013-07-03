@@ -1,5 +1,6 @@
 ---
-layout: post
+title: How to set up basic authentication of JobTracker webUI
+layout: default
 ---
 
 How to set up basic authentication of JobTracker webUI
@@ -12,7 +13,7 @@ JobTracker's UI is located under something like `${hadoop.home.dir}/webapps/job`
 For example, in `webapps/job/WEB-INF/web.xml` descriptor you can add the following to make sure that all urls are accessible only by the role "admin" and that [basic access authentication](http://en.wikipedia.org/wiki/Basic_access_authentication) is used.
 
 
-```
+~~~
   <security-constraint>
     <web-resource-collection>
       <web-resource-name>Protected</web-resource-name>
@@ -26,11 +27,11 @@ For example, in `webapps/job/WEB-INF/web.xml` descriptor you can add the followi
     <auth-method>BASIC</auth-method>
     <realm-name>jtRealm</realm-name>
   </login-config>
-```
+~~~
 
 Now you need to define the realm jtRealm that is referenced in web.xml. For this, you create a new file `webapps/job/WEB-INF/jetty-web.xml`
 
-```
+~~~
 <Configure class="org.mortbay.jetty.webapp.WebAppContext">
   <Get name="securityHandler">
     <Set name="userRealm">
@@ -43,7 +44,7 @@ Now you need to define the realm jtRealm that is referenced in web.xml. For this
     </Set>
   </Get>
 </Configure>
-```
+~~~
 
 Here we have specified jtRealm as HashUserRealm based on the [realm.properties file](http://docs.codehaus.org/display/JETTY/Realms): `${hadoop.home.dir}/jetty/etc/realm.properties`
 Now you can create this file with the following content to define user1 as an admin:
