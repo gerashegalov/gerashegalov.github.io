@@ -1,4 +1,6 @@
 gerashegalov.github.io
 ======================
 
-blog
+blog.
+
+Copyright. All rights reserved for files under _posts.
