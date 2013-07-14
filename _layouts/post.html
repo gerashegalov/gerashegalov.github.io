@@ -6,7 +6,7 @@ blog: true
 <h2>{{ page.title }}</h2>
 <div>
 <p>
-  {{ page.date | date: "%b %Y" }}
+  {{ page.date | date: "%d %b %Y" }}
   {% if page.updated_at %}
     revised {{ page.updated_at }}
   {% endif %}

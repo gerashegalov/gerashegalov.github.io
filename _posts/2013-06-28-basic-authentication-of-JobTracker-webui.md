@@ -1,5 +1,4 @@
 ---
-title: How to set up basic authentication of JobTracker webUI
 layout: post
 ---
 

@@ -1,5 +1,4 @@
 ---
-title: Running multiple tasktrackers per node
 layout: post
 ---
 
