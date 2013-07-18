@@ -56,14 +56,14 @@ diff -r -u /cygdrive/c/opt/mapr-client-2.1.3.19871GA-1.amd64/hadoop/hadoop-0.20.
 
 Now if we try to run hive cli, we run into the following exception:
 <pre>
-C:\>c:\opt\mapr\hive\hive-0.11\bin\hive
+C:\> C:\opt\mapr\hive\hive-0.11\bin\hive
 ...
 Illegal Hadoop Version: Unknown (expected A.B.* format)
 </pre>
 
 Indeed if we execute ```hadoop version```, we see the problem right away:
 <pre>
-> C:\opt\mapr\hadoop\hadoop-0.20.2\bin\hadoop version
+C:\> C:\opt\mapr\hadoop\hadoop-0.20.2\bin\hadoop version
 Hadoop Unknown
 Source Unknown -r Unknown
 Compiled by Unknown on Unknown
