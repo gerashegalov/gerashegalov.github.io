@@ -6,18 +6,21 @@ First we need to create a Hive tar to be deployed on Windows. This can be done
 using ```ant tar```, either on Linux or Windows using cygwin. Note, however,
 hive does not run on Cygwin, it requires a Windows-native cmd terminal.
 Vanilla hive does not contain cmd scripts yet which is subject of
-<a href="https://issues.apache.org/jira/browse/HIVE-3129">HIVE-3129</a>. It's
-incorporated in my <a href="https://github.com/gerashegalov/hive">fork of 
-branch-0.11-mapr</a>.
+<a href="https://issues.apache.org/jira/browse/HIVE-3129">HIVE-3129</a>. 
+A modified version is incorporated in
+<a href="https://github.com/gerashegalov/hive/tree/branch-0.11-mapr">
+this fork of branch-0.11-mapr</a>. So youn can either extract and patch the
+ structure from a Linux Hive package or build Hive from scratch.
 
-<pre>
+{% highlight bash %}
 $ git clone https://github.com/gerashegalov/hive.git
 $ git checkout branch-0.11-mapr
 $ ant tar
-</pre>
+{% endhighlight %}
+
 
 The tar is located under ```build/hive-0.11-mapr.tar.gz```. We need to create
-```MAPR_HOME``` directory C:\opt\mapr and extract the content into 
+```MAPR_HOME``` directory ```C:\opt\mapr``` and extract the content into 
 ```%MAPR_HOME%\hive```
 
 If not already done, extract Windows MapR client into ```%MAPR_HOME``` and 
@@ -54,14 +57,13 @@ diff -r -u /cygdrive/c/opt/mapr-client-2.1.3.19871GA-1.amd64/hadoop/hadoop-0.20.
 Now if we try to run hive cli, we run into the following exception:
 <pre>
 C:\>c:\opt\mapr\hive\hive-0.11\bin\hive
-
 ...
 Illegal Hadoop Version: Unknown (expected A.B.* format)
 </pre>
 
 Indeed if we execute ```hadoop version```, we see the problem right away:
 <pre>
->C:\opt\mapr\hadoop\hadoop-0.20.2\bin\hadoop version
+> C:\opt\mapr\hadoop\hadoop-0.20.2\bin\hadoop version
 Hadoop Unknown
 Source Unknown -r Unknown
 Compiled by Unknown on Unknown
@@ -71,12 +73,12 @@ From source with checksum Unknownc:\cygwin\home\gshegalo\dev\hive\build\dist>bin
 This means that hadoop-core jar in Windows build lacks the version info class
 that Hive depends on. Luckily this is not the case with the jar provided in
 Linux builds. So we can replace the Windows jar ```C:\opt\mapr\hadoop\hadoop-0.20.2\lib\hadoop-0.20.2-dev-core.jar``` with
-<a href="http://repository.mapr.com/nexus/content/groups/mapr-public/org/apache/hadoop/hadoop-core/1.0.3-mapr-2.1.3.1/hadoop-core-1.0.3-mapr-2.1.3.1.jar">a correct copy</a> in
- MapR's naven repo.
+<a href="http://repository.mapr.com/nexus/content/groups/mapr-public/org/apache/hadoop/hadoop-core/1.0.3-mapr-2.1.3.1/hadoop-core-1.0.3-mapr-2.1.3.1.jar">a correct copy</a> in MapR's maven repo.
 
 After this last step, Hive works fine even on Windows:
+
 <pre>
-C:\>c:\opt\mapr\hive\hive-0.11\bin\hive
+C:\> C:\opt\mapr\hive\hive-0.11\bin\hive
 ...
 hive> dfs -ls;
 Found 1 items

@@ -32,7 +32,7 @@ Hadoop Shell). HadooSh provides sensible hadoop command completions (file
 names, job/task attempt ids). The ```tlog``` command allows grepping
 task logs easily in moderate-size clusters. It utilizes the fact that user logs
  are accessible via the TaskTracker-embedded Jetty web server. 
-<pre>
+{% highlight bash %}
 # Show all logs for a job:
 gera > tlog -job job_201306131712_0004
 
@@ -41,4 +41,4 @@ gera > tlog -dir tgen -taskpattern *_m_*
 
 # grep logs for job tasks run on certain nodes
 gera > tlog -job job_201306131712_0004 -hostpattern *.rack.company.com | grep needle
-</pre>
+{% endhighlight %}

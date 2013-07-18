@@ -19,9 +19,11 @@ confX. The following is the minimum configuration.
 First we need to set a dedicated ```hadoop.tmp.dir``` to 
 ```/tmp/hadoop-${user.name}-X``` 
 
-~~~
+{% highlight bash %}
 $ cd ${HADOOP_HOME}
 $ cat confX/core-site.xml
+{% endhighlight %}
+{% highlight xml %}
 <?xml version="1.0"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 <configuration>
@@ -38,7 +40,7 @@ $ cat confX/core-site.xml
     <value>/tmp/hadoop-${user.name}-X</value>
   </property>
 </configuration>
-~~~
+{% endhighlight %}
 
 We also need to change ```mapred.task.tracker.http.address``` because it 
 normally uses a static http port 50060. We can either assign manually different
@@ -46,8 +48,10 @@ port to each X or we let the OS do it by using ```0.0.0.0:0```. We don't really
 need a well defined http port for TT because it is sent with heartbeats to JT.
 So we can have a single ```mapred-site.xml``` for all X as follows:
 
-~~~
+{% highlight bash %}
 $ cat confX/mapred-site.xml
+{% endhighlight %}
+{% highlight xml %}
 <?xml version="1.0"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 <configuration>
@@ -60,12 +64,12 @@ $ cat confX/mapred-site.xml
     <value>0.0.0.0:0</value>
   </property>
 </configuration>
-~~~
+{% endhighlight %}
 
 Then to start a TT X, we need to fix ```${HADOOP_IDENT_STRING}``` and specify
 a proper confX
 
-~~~~
+{% highlight bash %}
 $ export HADOOP_IDENT_STRING=${USER}-X
 $ bin/hadoop-daemon.sh --config confX start tasktracker
-~~~~
+{% endhighlight %}
