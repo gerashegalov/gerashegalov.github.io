@@ -1,3 +1,4 @@
 pygments: true
 permalink: '/:title'
 markdown: kramdown
+google_analytics_tracking_id: UA-2270631-2
