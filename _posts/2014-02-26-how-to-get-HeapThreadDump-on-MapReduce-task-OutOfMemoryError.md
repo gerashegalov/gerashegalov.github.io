@@ -3,7 +3,7 @@ layout: post
 title: How to get a heapdump of a task getting OutOfMemoryError
 ---
 
-One can enable an Hprof profiler `mapreduce.task.profile.params`. [Hprof|1] 
+One can enable an Hprof profiler `mapreduce.task.profile.params`. [Hprof][1] 
 supports heap profiles. If the tasks throw OOM less deterministically, that 
 method might not yield the desired result while affecting performance and 
 creating large profile files for nothing.
