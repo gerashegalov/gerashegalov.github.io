@@ -27,7 +27,7 @@ configure it according to the [doc][3].
 Next obstacle is that the shipped `hadoop.bat` does not accept the
 `HADOOP_CLASSPATH` passed by hive and uses explicit list of jars which 
 may result in exceeding the input line size limit of the cmd processor.
-The necessary change is summararized in the following unified diff:
+The necessary change is summarized in the following unified diff:
 
 {% highlight diff %}
 diff -r -u /cygdrive/c/opt/mapr-client-2.1.3.19871GA-1.amd64/hadoop/hadoop-0.20.2/bin/hadoop.bat /cygdrive/c/opt/mapr/hadoop/hadoop-0.20.2/bin/hadoop.bat

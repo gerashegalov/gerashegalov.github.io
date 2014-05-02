@@ -20,7 +20,7 @@ of individual nodes. The logs are then accessible throughout the cluster.
 It seems expensive but it does not actually involve any cross-node operations
 because the log volumes just like MapReduce shuffle volumes are local to the
 node. Once the job has finished, you can set up a job-centric view on the job
-log directories accross the cluster using `maprcli job linklogs` as explained
+log directories across the cluster using `maprcli job linklogs` as explained
 in the documentation. It makes easy to grep only mappers, reducers, or just
 tasks on a specific node. It works even easier when the cluster is mounted via
 NFS.
