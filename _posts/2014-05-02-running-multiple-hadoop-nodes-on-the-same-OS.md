@@ -15,7 +15,7 @@ When you build hadoop from scratch using
 $ mvn clean package -Pdist -DskipTests -Dmaven.javadoc.skip
 $ export G_HADOOP_HOME=${PWD}/hadoop-dist/target/hadoop-2.3.1-SNAPSHOT
 $ export HADOOP_CONF_DIR=${G_HADOOP_HOME}/etc/hadoop
-{% highlight %}
+{% endhighlight %}
 
 {% highlight bash %}
 [devbox hadoop-common (branch-2.3)]$ cd ${HADOOP_CONF_DIR}
@@ -40,7 +40,7 @@ drwxr-xr-x   3 osuser  staff    102 May  1 17:21 tmp1
 drwxr-xr-x   3 osuser  staff    102 May  1 17:22 tmp2
 -rw-r--r--   1 osuser  staff   4084 May  1 18:33 yarn-env.sh
 -rw-r--r--   1 osuser  staff   2153 May  1 17:02 yarn-site.xml
-{% highlight %}
+{% endhighlight %}
 
 Since we run multiple daemons of the same kind on the same node, we need to make sure that HADOOP/YARN_IDENT_STRING can be passed externally to the launch scripts. The line ```export HADOOP_IDENT_STRING``` in hadoop-env.sh has to be removed or modified according to [HADOOP-9979](https://issues.apache.org/jira/browse/HADOOP-9979).
 
@@ -68,7 +68,7 @@ core-site.xml contains a ViewFs mounttable. ns1 NN contains /user and ns2 NN con
   </property>
 </configuration>
 
-{% highlight %}
+{% endhighlight %}
 
 In *-site.xml, we make sure that all listener ports are distinct, and the directory locations can be passed as System properties.
 
@@ -161,7 +161,7 @@ In *-site.xml, we make sure that all listener ports are distinct, and the direct
     <value>org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider</value>
   </property>
 </configuration>
-{% highlight %}
+{% endhighlight %}
 
 ##### yarn-site.xml 
 {% highlight xml %}
@@ -235,7 +235,7 @@ In *-site.xml, we make sure that all listener ports are distinct, and the direct
     <value>true</value>
   </property>
 </configuration>
-{% highlight %}
+{% endhighlight %}
 
 ##### mapred-site.xml
 {% highlight xml %}
@@ -249,7 +249,7 @@ In *-site.xml, we make sure that all listener ports are distinct, and the direct
     <value>${my.mapreduce.shuffle.port}</value>
   </property>
 </configuration>
-{% highlight %}
+{% endhighlight %}
 
 Now we can start all the daemons using the following script:
 
@@ -342,7 +342,7 @@ export YARN_IDENT_STRING=${HADOOP_IDENT_STRING}
 export YARN_NODEMANAGER_OPTS="${YARN_NODE2_OPTS}"
 ${G_HADOOP_HOME}/sbin/yarn-daemon.sh --config ${PWD} ${CMD} nodemanager 
 
-{% highlight %}
+{% endhighlight %}
 
 Before we launch the cluster, we need to format namespaces by executing
 {% highlight bash %}
@@ -351,7 +351,7 @@ $ pseudo.sh format
 $ pseudo.sh start
 # stop the cluster
 $ pseudo.sh stop
-{% highlight %}
+{% endhighlight %}
 
 
 
