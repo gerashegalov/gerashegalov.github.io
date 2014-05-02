@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Running multiple hadoop nodes on the same physical OS/node
+title: Running multiple Hadoop 2 "nodes" on the same physical OS/node
 ---
 
 Sometimes we need to reproduce a complex bug that occurs in our production environment. It might be cumbersome to debug on the cluster itself, and running multiple VM's on the same laptop isn't always possible, and always inconvenient. Our issues may include NameNode (NN) High Availability (HA), NN Federation with ViewFs, DataNodes (DN), and YARN (ResourceManager and NodeManagers). In this post we describe how to run multiple hadoop daemons that are usually assigned dedicated hardware without any VM's. Unlike MiniCluster in hadoop unit tests, each daemon will be run realistically in a dedicated JVM each.
