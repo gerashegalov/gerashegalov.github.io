@@ -11,13 +11,13 @@ The following setup emulates two nodes NODE1 and NODE2.
 
 The configuration for all nodes is stored in the directory ```${HADOOP_CONF_DIR}```.
 When you build hadoop from scratch using 
-``` bash
+{% highlight bash %}
 $ mvn clean package -Pdist -DskipTests -Dmaven.javadoc.skip
 $ export G_HADOOP_HOME=${PWD}/hadoop-dist/target/hadoop-2.3.1-SNAPSHOT
 $ export HADOOP_CONF_DIR=${G_HADOOP_HOME}/etc/hadoop
-```
+{% highlight %}
 
-``` bash
+{% highlight bash %}
 [devbox hadoop-common (branch-2.3)]$ cd ${HADOOP_CONF_DIR}
 [devbox hadoop]$ ls -al .
 total 112
@@ -40,14 +40,14 @@ drwxr-xr-x   3 osuser  staff    102 May  1 17:21 tmp1
 drwxr-xr-x   3 osuser  staff    102 May  1 17:22 tmp2
 -rw-r--r--   1 osuser  staff   4084 May  1 18:33 yarn-env.sh
 -rw-r--r--   1 osuser  staff   2153 May  1 17:02 yarn-site.xml
-```
+{% highlight %}
 
 Since we run multiple daemons of the same kind on the same node, we need to make sure that HADOOP/YARN_IDENT_STRING can be passed externally to the launch scripts. The line ```export HADOOP_IDENT_STRING``` in hadoop-env.sh has to be removed or modified according to [HADOOP-9979](https://issues.apache.org/jira/browse/HADOOP-9979).
 
 core-site.xml contains a ViewFs mounttable. ns1 NN contains /user and ns2 NN contains /tmp
 
 ##### core-site.xml
-``` xml
+{% highlight xml %}
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
   <property>
@@ -68,12 +68,12 @@ core-site.xml contains a ViewFs mounttable. ns1 NN contains /user and ns2 NN con
   </property>
 </configuration>
 
-```
+{% highlight %}
 
 In *-site.xml, we make sure that all listener ports are distinct, and the directory locations can be passed as System properties.
 
 ##### hdfs-site.xml
-``` xml
+{% highlight xml %}
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
@@ -161,10 +161,10 @@ In *-site.xml, we make sure that all listener ports are distinct, and the direct
     <value>org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider</value>
   </property>
 </configuration>
-```
+{% highlight %}
 
 ##### yarn-site.xml 
-``` xml
+{% highlight xml %}
 <?xml version="1.0"?>
 <configuration>
   <!-- node specific: begin -->
@@ -235,10 +235,10 @@ In *-site.xml, we make sure that all listener ports are distinct, and the direct
     <value>true</value>
   </property>
 </configuration>
-```
+{% highlight %}
 
 ##### mapred-site.xml
-``` xml
+{% highlight xml %}
 <configuration>
   <property>
     <name>mapreduce.framework.name</name>
@@ -249,12 +249,12 @@ In *-site.xml, we make sure that all listener ports are distinct, and the direct
     <value>${my.mapreduce.shuffle.port}</value>
   </property>
 </configuration>
-```
+{% highlight %}
 
 Now we can start all the daemons using the following script:
 
 ##### pseudo.sh
-``` bash
+{% highlight bash %}
 #!/bin/bash
 
 if [ "$1" == "-debug" ]; then
@@ -342,16 +342,16 @@ export YARN_IDENT_STRING=${HADOOP_IDENT_STRING}
 export YARN_NODEMANAGER_OPTS="${YARN_NODE2_OPTS}"
 ${G_HADOOP_HOME}/sbin/yarn-daemon.sh --config ${PWD} ${CMD} nodemanager 
 
-```
+{% highlight %}
 
 Before we launch the cluster, we need to format namespaces by executing
-``` bash
+{% highlight bash %}
 $ pseudo.sh format
 # launch ihe cluster
 $ pseudo.sh start
 # stop the cluster
 $ pseudo.sh stop
-```
+{% highlight %}
 
 
 
