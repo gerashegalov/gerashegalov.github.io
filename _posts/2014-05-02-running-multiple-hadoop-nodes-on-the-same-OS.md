@@ -6,8 +6,15 @@ title: Running multiple Hadoop 2 "nodes" on the same physical OS/node
 Sometimes we need to reproduce a complex bug that occurs in our production environment. It might be cumbersome to debug on the cluster itself, and running multiple VM's on the same laptop isn't always possible, and always inconvenient. Our issues may include NameNode (NN) High Availability (HA), NN Federation with ViewFs, DataNodes (DN), and YARN (ResourceManager and NodeManagers). In this post we describe how to run multiple hadoop daemons that are usually assigned dedicated hardware without any VM's. Unlike MiniCluster in hadoop unit tests, each daemon will be run realistically in a dedicated JVM each.
 
 The following setup emulates two nodes NODE1 and NODE2. 
-- NODE1 runs NN1 for namespace ns1, the YARN RM, and worker daemons, a DN and an NM.
-- NODE2 runs NN1 for namespace ns2, and worker daemons, DN and NM.
+NODE1 runs 
+- NN1 for namespace ns1, 
+- YARN RM,
+- MR JobHistoryServer
+- and worker daemons, a DN and an NM.
+ 
+NODE2 runs: 
+- NN2 for namespace ns2,
+- and worker daemons, DN and NM.
 
 The configuration for all nodes is stored in the directory ```${HADOOP_CONF_DIR}```.
 When you build hadoop from scratch using 
@@ -257,14 +264,13 @@ Now we can start all the daemons using the following script:
 {% highlight bash %}
 #!/bin/bash
 
-if [ "$1" == "-debug" ]; then
+if [ "${1}" == "-debug" ]; then
   shift
   set -x
 fi
 
 cd ${HADOOP_CONF_DIR}
 export HADOOP_LOG_DIR=${PWD}/logs
-CMD=${1}
 
 #
 # node specific opts
@@ -300,7 +306,7 @@ YARN_NODE2_OPTS="
   -Dmy.mapreduce.shuffle.port=13563
   -Dmy.decommission.file=/tmp/decommission2"
 
-if [ "$1" == "format" ]; then
+if [ "${1}" == "format" ]; then
   clid="MY.CID-$(date +%s)"
 
   export HADOOP_IDENT_STRING=${USER}-node1
@@ -314,43 +320,70 @@ if [ "$1" == "format" ]; then
   exit 0
 fi
 
-echo "${CMD} node1 daemons"
-export HADOOP_IDENT_STRING=${USER}-node1
+CMD=${1}
+shift
 
-export HADOOP_NAMENODE_OPTS="${HDFS_NODE1_OPTS}"
-${G_HADOOP_HOME}/sbin/hadoop-daemon.sh --config ${PWD} ${CMD} namenode   
-export HADOOP_DATANODE_OPTS="${HDFS_NODE1_OPTS}" 
-${G_HADOOP_HOME}/sbin/hadoop-daemon.sh --config ${PWD} ${CMD} datanode   
+case "${1}" in
+  "node1")
+    NODE1="yes"
+    ;;
+  "node2")
+    NODE2="yes"
+    ;;
+  "")
+    NODE1="yes"
+    NODE2="yes"
+    ;;
+  *)
+    NODE1="no"
+    NODE2="no"
+    ;;
+esac
 
-export YARN_IDENT_STRING=${HADOOP_IDENT_STRING}
+if [ "${NODE1}" == "yes" ]; then
+  echo "${CMD} node1 daemons"
+  export HADOOP_IDENT_STRING=${USER}-node1
 
-export YARN_RESOURCEMANAGER_OPTS="-Dmy.hadoop.tmp.dir=${PWD}/tmp1"
-${G_HADOOP_HOME}/sbin/yarn-daemon.sh --config ${PWD} ${CMD} resourcemanager
+  export HADOOP_NAMENODE_OPTS="${HDFS_NODE1_OPTS}"
+  ${G_HADOOP_HOME}/sbin/hadoop-daemon.sh --config ${PWD} ${CMD} namenode   
+  export HADOOP_DATANODE_OPTS="${HDFS_NODE1_OPTS}" 
+  ${G_HADOOP_HOME}/sbin/hadoop-daemon.sh --config ${PWD} ${CMD} datanode   
 
-export YARN_NODEMANAGER_OPTS="${YARN_NODE1_OPTS}"
-${G_HADOOP_HOME}/sbin/yarn-daemon.sh --config ${PWD} ${CMD} nodemanager   
+  export YARN_IDENT_STRING=${HADOOP_IDENT_STRING}
 
-echo "$CMD node2 daemons"
-export HADOOP_IDENT_STRING=${USER}-node2
-  
-export HADOOP_NAMENODE_OPTS="${HDFS_NODE2_OPTS}" 
-${G_HADOOP_HOME}/sbin/hadoop-daemon.sh --config ${PWD} ${CMD} namenode   
-export HADOOP_DATANODE_OPTS="${HDFS_NODE2_OPTS}"
-${G_HADOOP_HOME}/sbin/hadoop-daemon.sh --config ${PWD} ${CMD} datanode   
+  export YARN_RESOURCEMANAGER_OPTS="-Dmy.hadoop.tmp.dir=${PWD}/tmp1"
+  ${G_HADOOP_HOME}/sbin/yarn-daemon.sh --config ${PWD} ${CMD} resourcemanager
 
-export YARN_IDENT_STRING=${HADOOP_IDENT_STRING}
-export YARN_NODEMANAGER_OPTS="${YARN_NODE2_OPTS}"
-${G_HADOOP_HOME}/sbin/yarn-daemon.sh --config ${PWD} ${CMD} nodemanager 
+  export YARN_NODEMANAGER_OPTS="${YARN_NODE1_OPTS}"
+  ${G_HADOOP_HOME}/sbin/yarn-daemon.sh --config ${PWD} ${CMD} nodemanager  
 
+  export HADOOP_MAPREDUCE_IDENT_STRING="$HADOOP_IDENT_STRING"
+  ${G_HADOOP_HOME}/sbin//mr-jobhistory-daemon.sh --config ${PWD} ${CMD} \
+    historyserver
+fi
+
+if [ "${NODE2}" == "yes" ]; then
+  echo "${CMD} node2 daemons"
+  export HADOOP_IDENT_STRING=${USER}-node2
+    
+  export HADOOP_NAMENODE_OPTS="${HDFS_NODE2_OPTS}" 
+  ${G_HADOOP_HOME}/sbin/hadoop-daemon.sh --config ${PWD} ${CMD} namenode   
+  export HADOOP_DATANODE_OPTS="${HDFS_NODE2_OPTS}"
+  ${G_HADOOP_HOME}/sbin/hadoop-daemon.sh --config ${PWD} ${CMD} datanode   
+
+  export YARN_IDENT_STRING=${HADOOP_IDENT_STRING}
+  export YARN_NODEMANAGER_OPTS="${YARN_NODE2_OPTS}"
+  ${G_HADOOP_HOME}/sbin/yarn-daemon.sh --config ${PWD} ${CMD} nodemanager   
+fi
 {% endhighlight %}
 
 Before we launch the cluster, we need to format namespaces by executing
 {% highlight bash %}
 $ pseudo.sh format
 # launch ihe cluster
-$ pseudo.sh start
+$ pseudo.sh start [node]
 # stop the cluster
-$ pseudo.sh stop
+$ pseudo.sh stop [node]
 {% endhighlight %}
 
 
