@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Password protection of JobTracker webUI
+title: Test copyright comment
 ---
 
 <!---
