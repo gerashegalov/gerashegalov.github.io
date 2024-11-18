@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Test copyright comment
+license: some license info
 ---
 
 <!---
